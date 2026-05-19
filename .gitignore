@@ -40,6 +40,17 @@ data/raw/*.zip
 data/raw/*.tar.gz
 data/raw/*.h5
 data/raw/*.hdf5
+
+# PetFinder.my (Kaggle) — large trees; fetch via notebooks/01_download_data.py
+data/raw/train_images/
+data/raw/train_metadata/
+data/raw/test_images/
+data/raw/test_metadata/
+data/raw/train_sentiment/
+data/raw/test_sentiment/
+data/raw/train/
+data/raw/test/
+
 data/processed/*.csv
 data/processed/*.json
 data/processed/*.parquet
