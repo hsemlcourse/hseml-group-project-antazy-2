@@ -1,18 +1,22 @@
-# Core
+# Python 3.10+ (Docker/CI). Для pandas 3.x нужен Python 3.11+.
+
+# Core ML & data
 numpy>=1.24.0
 pandas>=2.0.0
 scikit-learn>=1.3.0
-
-# Code quality (do not remove — used by CI)
-flake8>=6.1.0
-pytest>=7.4.0
-papermill>=2.4.0
-
-# Notebooks (для papermill в CI)
-ipykernel>=6.0.0
-jupyter>=1.0.0
+scipy>=1.10.0
+matplotlib>=3.7.0
 
 # Utilities
 joblib>=1.3.0
 python-dotenv>=1.0.0
 kaggle>=1.6.0
+
+# Notebooks (локальная разработка и papermill в CI)
+ipykernel>=6.0.0
+jupyter>=1.0.0
+papermill>=2.4.0
+
+# Code quality (do not remove — used by CI)
+flake8>=6.1.0
+pytest>=7.4.0

@@ -30,6 +30,9 @@
 │   └── report.md               # Финальный отчет
 ├── tests
 │   └── .gitkeep
+├── Dockerfile
+├── docker-compose.yml
+├── Makefile
 ├── requirements.txt
 └── README.md
 ```
@@ -47,6 +50,28 @@ python -m venv .venv
 # 2) Установить зависимости
 pip install -r requirements.txt
 ```
+
+## Docker
+
+Зависимости устанавливаются **при сборке образа** из `requirements.txt` (аналог локального `pip install`):
+
+```bash
+# Сборка образа (pip install -r requirements.txt внутри Dockerfile)
+docker compose build
+
+# Запуск контейнера
+docker compose run --rm app
+```
+
+Папка `data/` монтируется в контейнер: при наличии `data/raw/train/train.csv` можно выполнять ноутбуки внутри Docker.
+
+## Проверка кода (линтер)
+
+```bash
+make lint
+```
+
+Проверяется `notebooks/01_download_data.py` через `flake8` (конфигурация в `.flake8`).
 
 ## Работа с данными
 
