@@ -72,6 +72,7 @@ models/*.pt
 models/*.pth
 models/*.onnx
 !models/.gitkeep
+!models/feature_defaults.json
 
 # =============================================================================
 # Reports — figures are regenerated, but keep CSV

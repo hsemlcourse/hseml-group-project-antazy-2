@@ -20,7 +20,12 @@ jobs:
           cache: "pip"
 
       - name: Install dependencies
-        run: pip install flake8
+        run: pip install -r requirements.txt
 
       - name: Run flake8
         run: make lint
+
+      - name: Run tests
+        run: make test
+        env:
+          PYTHONPATH: src:.

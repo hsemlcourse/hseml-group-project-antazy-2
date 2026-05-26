@@ -17,19 +17,22 @@
 
 ```text
 .
+├── app                         # FastAPI + Telegram-бот
+├── src/petfinder               # Препроцессинг и инференс
 ├── data
 │   ├── processed               # Предобработанные наборы
 │   └── raw                     # Сырые данные из Kaggle
-├── models                      # Сохраненные модели (joblib)
+├── models                      # best_model.joblib, feature_defaults.json
 ├── notebooks
 │   ├── 01_download_data.py  # Скачивание и распаковка данных
 │   ├── 02_preprocessing.ipynb  # EDA, визуализация, очистка и split
 │   └── 03_modeling.ipynb       # Модели и метрики
+├── scripts                     # build_defaults, plot_feature_importance
 ├── presentation                # Материалы для защиты
 ├── report
-│   └── report.md               # Финальный отчет
-├── tests
-│   └── .gitkeep
+│   ├── report.md               # Финальный отчет
+│   └── assets/                 # Скриншоты и графики для PDF
+├── tests                       # pytest для API
 ├── Dockerfile
 ├── docker-compose.yml
 ├── Makefile
@@ -65,13 +68,52 @@ docker compose run --rm app
 
 Папка `data/` монтируется в контейнер: при наличии `data/raw/train/train.csv` можно выполнять ноутбуки внутри Docker.
 
-## Проверка кода (линтер)
+## Деплой (API + Telegram)
+
+Перед запуском обучите модель (`03_modeling.ipynb`) и при необходимости сгенерируйте дефолты для бота:
+
+```bash
+python scripts/build_defaults.py
+```
+
+### FastAPI
+
+```bash
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+- Swagger: http://localhost:8000/docs  
+- Health: http://localhost:8000/health  
+- Predict: `POST /predict` (JSON с признаками из `train.csv`, без `AdoptionSpeed`)
+
+### Telegram-бот
+
+1. Создайте бота у [@BotFather](https://t.me/BotFather).
+2. Скопируйте `.env.example` → `.env`, укажите `TELEGRAM_BOT_TOKEN`.
+3. Запуск:
+
+```bash
+python -m app.telegram_bot
+```
+
+Команды: `/start`, `/predict` (пошаговый ввод), `/predict_json` (полный JSON).
+
+### Docker
+
+```bash
+docker compose build
+docker compose up api
+docker compose --profile bot up bot   # нужен .env
+```
+
+## Проверка кода (линтер и тесты)
 
 ```bash
 make lint
+make test
 ```
 
-Проверяется `notebooks/01_download_data.py` через `flake8` (конфигурация в `.flake8`).
+`flake8` — `app/`, `src/`, `scripts/`, `tests/`. `pytest` — API (пропуск predict, если нет модели в CI).
 
 ## Работа с данными
 
@@ -142,3 +184,12 @@ jupyter nbconvert --to notebook --execute notebooks/03_modeling.ipynb --output 0
 ## Отчет
 
 Финальный отчет: [`report/report.md`](report/report.md)
+
+PDF (нужен [pandoc](https://pandoc.org/)):
+
+```bash
+chmod +x report/build_pdf.sh
+./report/build_pdf.sh
+```
+
+Скриншоты деплоя — в `report/assets/` (см. `report/assets/README.md`). В §7 отчёта вставьте ссылку на видео-демо.
